@@ -1,0 +1,5 @@
+node_modules/
+dist/
+public/diagrams/
+public/views/
+*.log
