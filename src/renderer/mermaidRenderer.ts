@@ -5,7 +5,9 @@ function escapeHtml(text: string): string {
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
 }
 
 /**
@@ -18,14 +20,23 @@ export async function createMermaidHtmlPage(
   outputPath: string
 ): Promise<void> {
   const escapedCode = escapeHtml(mermaidCode);
+  // Escape id for safe use in HTML attributes and text
+  const escapedId = escapeHtml(id);
 
   const html = `<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diagram - ${id}</title>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <title>Diagram - ${escapedId}</title>
+  <!--
+    Pinned to mermaid@10.9.3. Update SRI hash when upgrading:
+    sha384-<hash> can be computed via: openssl dgst -sha384 -binary mermaid.min.js | openssl base64 -A
+  -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js"
+    crossorigin="anonymous"
+  ></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -67,16 +78,18 @@ export async function createMermaidHtmlPage(
     <pre class="mermaid">${escapedCode}</pre>
   </div>
   <div class="error-box" id="error-box"></div>
-  <span class="diagram-id">ID: ${id}</span>
+  <span class="diagram-id">ID: ${escapedId}</span>
   <script>
+    // Initialize once with startOnLoad: false, then call run() to render.
+    // Using startOnLoad: true AND mermaid.init() together causes a double-render.
     mermaid.initialize({
-      startOnLoad: true,
+      startOnLoad: false,
       theme: 'default',
-      securityLevel: 'loose',
+      securityLevel: 'strict',
     });
-    mermaid.init(undefined, '.mermaid').catch(function(err) {
+    mermaid.run({ querySelector: '.mermaid' }).catch(function(err) {
       var box = document.getElementById('error-box');
-      box.textContent = 'Gagal merender diagram: ' + err.message;
+      box.textContent = 'Gagal merender diagram: ' + (err && err.message ? err.message : String(err));
       box.style.display = 'block';
     });
   </script>
