@@ -1,26 +1,28 @@
 # MCP Mermaid Visual Server
 
-MCP Server untuk membuat dan memvisualisasikan diagram [Mermaid](https://mermaid.js.org/) langsung di browser. Diagram dirender secara **client-side** via Mermaid.js CDN — tidak memerlukan Puppeteer atau headless browser.
+> [Bahasa Indonesia](README.id.md)
 
-## Fitur
+An MCP Server for creating and visualizing [Mermaid](https://mermaid.js.org/) diagrams directly in the browser. Diagrams are rendered **client-side** via the Mermaid.js CDN — no Puppeteer or headless browser required.
 
-- **8 tipe diagram** didukung: flowchart, sequence, mindmap, classDiagram, erDiagram, stateDiagram, gantt, pie
-- **Render via browser** — diagram dibuka lewat link HTTP lokal
-- **XSS-safe** — semua input di-escape sebelum ditulis ke HTML
-- **MCP-compatible** — bisa diintegrasikan dengan Claude Desktop atau MCP client lainnya
+## Features
 
-## Cara Kerja
+- **8 diagram types** supported: flowchart, sequence, mindmap, classDiagram, erDiagram, stateDiagram, gantt, pie
+- **Browser-based rendering** — diagrams are opened via a local HTTP link
+- **XSS-safe** — all input is escaped before being written to HTML
+- **MCP-compatible** — integrates with Claude Desktop or any MCP client
+
+## How It Works
 
 ```
-MCP Client → render_mermaid_to_web → generate HTML → serve via Express → buka di browser
+MCP Client → render_mermaid_to_web → generate HTML → serve via Express → open in browser
 ```
 
-1. Tool menerima kode Mermaid
-2. Membuat file `.html` di `public/views/`
-3. Express server menyajikan file di `http://localhost:3000/views/<id>.html`
-4. Browser membuka link dan merender diagram menggunakan Mermaid.js CDN
+1. The tool receives Mermaid code
+2. Generates an `.html` file in `public/views/`
+3. Express serves the file at `http://localhost:3000/views/<id>.html`
+4. The browser opens the link and renders the diagram using Mermaid.js CDN
 
-## Instalasi
+## Installation
 
 ```bash
 git clone https://github.com/diarfirman/visualize-mermaid.git
@@ -29,39 +31,39 @@ npm install
 npm run build
 ```
 
-## Menjalankan Server
+## Running the Server
 
 ```bash
 npm start
 ```
 
-Server MCP berjalan via stdio. Web server otomatis berjalan di `http://localhost:3000`.
+The MCP server runs over stdio. The web server automatically starts at `http://localhost:3000`.
 
-Untuk mengubah port:
+To change the port:
 
 ```bash
 PORT=4000 npm start
 ```
 
-## Tools MCP
+## MCP Tools
 
 ### `get_mermaid_format`
 
-Mengembalikan template dan contoh untuk tipe diagram tertentu.
+Returns the template and examples for a specific diagram type.
 
-**Parameter:**
+**Parameters:**
 
-| Parameter | Tipe | Wajib | Keterangan |
-|-----------|------|-------|------------|
-| `diagram_type` | string | Tidak | Tipe diagram. Kosongkan untuk melihat semua tipe yang tersedia. |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `diagram_type` | string | No | Diagram type. Leave empty to list all supported types. |
 
-**Tipe yang didukung:** `flowchart`, `sequence`, `mindmap`, `classDiagram`, `erDiagram`, `stateDiagram`, `gantt`, `pie`
+**Supported types:** `flowchart`, `sequence`, `mindmap`, `classDiagram`, `erDiagram`, `stateDiagram`, `gantt`, `pie`
 
-**Contoh response (tanpa parameter):**
+**Example response (no parameter):**
 ```json
 {
-  "supported_types": ["flowchart", "sequence", "mindmap", ...],
-  "message": "Silakan pilih salah satu tipe untuk mendapatkan format detail."
+  "supported_types": ["flowchart", "sequence", "mindmap", "..."],
+  "message": "Please choose a type to get detailed format."
 }
 ```
 
@@ -69,23 +71,23 @@ Mengembalikan template dan contoh untuk tipe diagram tertentu.
 
 ### `render_mermaid_to_web`
 
-Merender kode Mermaid menjadi halaman web dan mengembalikan URL untuk dibuka di browser.
+Renders Mermaid code into a web page and returns a URL to open in the browser.
 
-**Parameter:**
+**Parameters:**
 
-| Parameter | Tipe | Wajib | Keterangan |
-|-----------|------|-------|------------|
-| `mermaid_code` | string | Ya | Kode Mermaid yang valid. |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `mermaid_code` | string | Yes | Valid Mermaid code. |
 
-**Contoh response:**
+**Example response:**
 ```json
 {
   "web_url": "http://localhost:3000/views/43aafb08-0dff-434f-8ea6-e2361ceba68d.html",
-  "message": "Buka web_url di browser untuk melihat diagram yang dirender."
+  "message": "Open web_url in your browser to view the rendered diagram."
 }
 ```
 
-## Contoh Penggunaan
+## Usage Examples
 
 ### Flowchart
 
@@ -115,9 +117,9 @@ erDiagram
     ORDER ||--|{ LINE-ITEM : contains
 ```
 
-## Konfigurasi Claude Desktop
+## Claude Desktop Configuration
 
-Tambahkan ke file `claude_desktop_config.json`:
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
@@ -130,35 +132,35 @@ Tambahkan ke file `claude_desktop_config.json`:
 }
 ```
 
-## Struktur Proyek
+## Project Structure
 
 ```
 src/
 ├── index.ts                  # Entry point — MCP server + web server
 ├── renderer/
-│   └── mermaidRenderer.ts    # Generate HTML page dengan Mermaid.js CDN
+│   └── mermaidRenderer.ts    # Generates HTML page with Mermaid.js CDN
 ├── tools/
 │   ├── getFormat.ts          # Tool: get_mermaid_format
 │   └── renderToWeb.ts        # Tool: render_mermaid_to_web
 ├── utils/
-│   └── templates.ts          # Template & contoh untuk semua tipe diagram
+│   └── templates.ts          # Templates and examples for all diagram types
 └── web/
-    └── server.ts             # Express server — serve file HTML di public/views/
+    └── server.ts             # Express server — serves HTML files from public/views/
 ```
 
 ## Development
 
 ```bash
-# Jalankan langsung dengan ts-node (tanpa build)
+# Run directly with ts-node (no build step)
 npm run dev
 
 # Build TypeScript
 npm run build
 
-# Cek vulnerability
+# Check for vulnerabilities
 npm audit
 ```
 
-## Lisensi
+## License
 
 MIT
