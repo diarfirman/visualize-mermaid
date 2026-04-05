@@ -8,7 +8,7 @@ const viewsDir = path.join(__dirname, '../../public/views');
 export async function renderMermaidToWeb(mermaidCode: string) {
   // Validasi input
   if (!mermaidCode || mermaidCode.trim().length === 0) {
-    throw new Error('mermaid_code tidak boleh kosong.');
+    throw new Error('mermaid_code must not be empty.');
   }
 
   const id = uuidv4();
@@ -20,6 +20,6 @@ export async function renderMermaidToWeb(mermaidCode: string) {
 
   return {
     web_url: `${baseUrl}/views/${id}.html`,
-    message: 'Buka web_url di browser untuk melihat diagram yang dirender.',
+    message: 'Open web_url in a browser to view the rendered diagram.',
   };
 }

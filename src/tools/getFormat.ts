@@ -4,14 +4,18 @@ export async function getMermaidFormat(diagramType?: string) {
   if (!diagramType) {
     return {
       supported_types: Object.keys(MermaidTemplates),
-      message: "Silakan pilih salah satu tipe untuk mendapatkan format detail.",
+      message: "Use render_mermaid_to_web with mermaid_code following the formats above to display a diagram.",
+      formats: MermaidTemplates,
     };
   }
 
-  const template = MermaidTemplates[diagramType.toLowerCase()];
+  const key = Object.keys(MermaidTemplates).find(
+    k => k.toLowerCase() === diagramType.toLowerCase()
+  );
+  const template = key ? MermaidTemplates[key] : undefined;
   if (!template) {
     throw new Error(
-      `Tipe diagram '${diagramType}' tidak didukung. Tipe yang tersedia: ${Object.keys(MermaidTemplates).join(', ')}`
+      `Diagram type '${diagramType}' is not supported. Available types: ${Object.keys(MermaidTemplates).join(', ')}`
     );
   }
 

@@ -25,7 +25,7 @@ export async function createMermaidHtmlPage(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diagram - ${id}</title>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -95,7 +95,7 @@ export async function createMermaidHtmlPage(
     });
     mermaid.init(undefined, '.mermaid').catch(function(err) {
       var box = document.getElementById('error-box');
-      box.textContent = 'Gagal merender diagram: ' + err.message;
+      box.textContent = 'Failed to render diagram: ' + err.message;
       box.style.display = 'block';
     });
   </script>

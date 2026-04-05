@@ -21,14 +21,14 @@ function createMcpServer() {
         {
           name: 'get_mermaid_format',
           description:
-            'Dapatkan format dan template untuk membuat diagram Mermaid. Kosongkan diagram_type untuk melihat semua tipe yang didukung.',
+            'Get format, template, and rules for creating Mermaid diagrams. Leave diagram_type empty to get all supported types with their full format at once.',
           inputSchema: {
             type: 'object',
             properties: {
               diagram_type: {
                 type: 'string',
                 description:
-                  'Jenis diagram (flowchart, sequence, mindmap, classDiagram, erDiagram, stateDiagram, gantt, pie, journey). Kosongkan untuk melihat daftar.',
+                  'Diagram type (flowchart, sequence, mindmap, classDiagram, erDiagram, stateDiagram, gantt, pie, journey, timeline, architecture). Leave empty to get all formats at once.',
               },
             },
           },
@@ -36,13 +36,13 @@ function createMcpServer() {
         {
           name: 'render_mermaid_to_web',
           description:
-            'Render kode Mermaid menjadi diagram PNG dan tampilkan dalam halaman web. Mengembalikan URL yang bisa dibuka di browser.',
+            'Render Mermaid code into a diagram and display it in a web page. Returns a URL that can be opened in a browser. ALWAYS call get_mermaid_format first to get the correct format, template, and rules before calling this tool.',
           inputSchema: {
             type: 'object',
             properties: {
               mermaid_code: {
                 type: 'string',
-                description: 'Kode Mermaid yang valid.',
+                description: 'Valid Mermaid diagram code.',
               },
             },
             required: ['mermaid_code'],
@@ -75,7 +75,7 @@ function createMcpServer() {
         };
       }
 
-      throw new Error(`Tool tidak dikenal: ${name}`);
+      throw new Error(`Unknown tool: ${name}`);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return {
