@@ -5,7 +5,7 @@ An MCP (Model Context Protocol) server that allows AI agents (Claude, Elastic Ag
 ## Features
 
 - Exposes two MCP tools:
-  - `get_mermaid_format` — returns templates and syntax examples for 8 diagram types
+  - `get_mermaid_format` — returns templates and syntax examples for 11 diagram types
   - `render_mermaid_to_web` — renders Mermaid code into an HTML page and returns a public URL
 - Diagrams are rendered client-side in the browser via Mermaid CDN (no headless browser needed)
 - HTTPS support via nginx reverse proxy
@@ -14,7 +14,7 @@ An MCP (Model Context Protocol) server that allows AI agents (Claude, Elastic Ag
 
 ## Diagram Types Supported
 
-`flowchart`, `sequence`, `mindmap`, `classDiagram`, `erDiagram`, `stateDiagram`, `gantt`, `pie`
+`flowchart`, `sequence`, `mindmap`, `classDiagram`, `erDiagram`, `stateDiagram`, `gantt`, `pie`, `journey`, `timeline`, `architecture`
 
 ## Project Structure
 
@@ -130,6 +130,73 @@ The MCP endpoint will be available at:
 ```
 https://your-domain.com:4443/mcp
 ```
+
+## Connecting to Claude Desktop or LM Studio
+
+You can connect any MCP-compatible client to the public server using `mcp-remote`.
+
+### Prerequisites
+
+Install `mcp-remote` globally:
+
+```bash
+npm install -g mcp-remote
+```
+
+### Claude Desktop
+
+Edit your Claude Desktop config file:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "mermaid-visual": {
+      "command": "mcp-remote",
+      "args": [
+        "https://drfmermaid.abrdns.com:4443/mcp"
+      ]
+    }
+  }
+}
+```
+
+> **Windows users:** If `mcp-remote` is not found, use the full path to the `.cmd` file:
+> ```json
+> {
+>   "mcpServers": {
+>     "mermaid-visual": {
+>       "command": "C:\\Users\\<YourUsername>\\AppData\\Roaming\\npm\\mcp-remote.cmd",
+>       "args": [
+>         "https://drfmermaid.abrdns.com:4443/mcp"
+>       ]
+>     }
+>   }
+> }
+> ```
+
+### LM Studio
+
+In LM Studio, go to **Settings > MCP Servers** and add:
+
+```json
+{
+  "mcpServers": {
+    "mermaid-visual": {
+      "command": "mcp-remote",
+      "args": [
+        "https://drfmermaid.abrdns.com:4443/mcp"
+      ]
+    }
+  }
+}
+```
+
+> **Windows users:** Replace `"mcp-remote"` with the full path as shown in the Claude Desktop section above.
+
+---
 
 ## Connecting to Elastic Agent Builder
 
